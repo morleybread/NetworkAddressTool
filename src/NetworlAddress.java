@@ -63,7 +63,7 @@ public void generate() {
         ArrayList<Integer> latestResult=new ArrayList<>();//返回
         public int mainin(int[] m){
             if(m[0]>m[1]){
-                return 0;
+                return 0;    //字节一必须的小于字节二
             }
             a=m;
 
@@ -99,38 +99,14 @@ public void generate() {
 
 
 
-            for(int j=0;j<s;j++)//twoD.get(0).length为 8 //循环8次//获取一个字符数组长度 列  比列
+            for(int j=0;j<s;j++)//twoD.get(0).length为 8 //循环8次//获取一个字符数组长度 列
             {
-
                 arrys.add((int) twoD.get(0)[j]-48);
-
-
             };
             for(int p=arrys.size();p<8;p++){
                 arrys.add(0);
-
             }
 
-
-
-
-//            boolean flag=false;
-//            for(int i=1;i<twoD.size();i++){         //有多少个数组 twoD.size()为行
-//                if(twoD.get(i)[j]!=twoD.get(i-1)[j]){        //竖向遍历
-//                    flag=true;
-//                }
-//            }
-//            if (flag){
-//                arrys.add(0);
-//            }else
-//            {
-//               arrys.add(1);
-//            }
-//        }
-
-
-
-//
 //resultarry 为最终结果
             StringBuilder myresult= new StringBuilder();
             for (Integer integer : arrys) {
@@ -148,7 +124,7 @@ public void generate() {
         public  char [] zerorepaire(int num,int []arr){//返回补齐的0
             //用0补齐8位
 
-            Arrays.sort(arr);
+
             int max= arr[arr.length-1];
             String binary=Integer.toBinaryString(max);
             char [] maxs= binary.toCharArray();
@@ -167,10 +143,10 @@ public void generate() {
             char[] rechar= binary.toCharArray();
 
             //合并字符数组
-            char  [] result0=new char[chararry.length+rechar.length];
+            char  [] result0=new char[chararry.length+rechar.length];//添加缺少的0
             System.arraycopy(chararry,0,result0,0,chararry.length);
             System.arraycopy(rechar,0,result0,chararry.length,rechar.length);
-            twoD.add(result0);
+            twoD.add(result0);//添加 完整的8位字符数组
 
 
         }
