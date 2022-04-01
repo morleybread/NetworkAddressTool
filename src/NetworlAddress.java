@@ -66,7 +66,6 @@ public void generate() {
                 return 0;    //字节一必须的小于字节二
             }
             a=m;
-
             for (int k : a) {
                 pares(k);
             }

@@ -15,8 +15,8 @@ public class ACLcalculator {
     public static void main(String[] args) {
         System.out.println("简单的ACL通配符转换c类 ip");
         System.out.println("输入ip地址的范围，一共两次 敲完一个，回车");
-        paresm("192.168.3.1");
-        paress("192.168.3.64");
+        paresm("192.168.8.0");
+        paress("192.168.15.255");
         //执行后list1 list2分别存储两个ip地址
         genate();//genlist为所有ip地址  每个ip地址用arrlist存储
         precmpare();
@@ -94,7 +94,6 @@ public class ACLcalculator {
             for (int j = 0; j < 4; j++) {
                 genlist.get(i).add(list.get(j)); //为每个ip添加 list 四个的字节 第四个字节是 动态变化的
             }
-
         }
     }
 
