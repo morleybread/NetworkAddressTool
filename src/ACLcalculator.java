@@ -4,55 +4,53 @@ import java.util.Arrays;
 //ACL 子网掩码计算器
 
 public class ACLcalculator {
-    static int p = 0;
-    static int [] arrya ; //给一个数组  遍历
-    static int b, temps;
+    static  ArrayList<ArrayList<Integer>> temps =new ArrayList<>();//存储四个比较数组
+    static int  numbers; //b是要生成的ip个数
     static ArrayList <Integer> preresult = new ArrayList<>();
-    static ArrayList <Integer> list;
-    static ArrayList <Integer> list2;
+    static ArrayList <Integer> list;//开始ip
+    static ArrayList <Integer> list2;//结束ip
     static ArrayList<Integer> rearresult = new ArrayList<>();
-    static  ArrayList<ArrayList<Integer>> genlist = new ArrayList<>();
+
     public static void main(String[] args) {
         System.out.println("简单的ACL通配符转换c类 ip");
         System.out.println("输入ip地址的范围，一共两次 敲完一个，回车");
         paresm("192.168.8.0");
-        paress("192.168.15.255");
+        paress("192.168.88.255");
         //执行后list1 list2分别存储两个ip地址
-        genate();//genlist为所有ip地址  每个ip地址用arrlist存储
-        precmpare();
+        generate();
+        precmpare(); //前比
         System.out.println("=============");
-        rearcmpare();//生成结果
+        rearcmpare();//后比 生成结果
         System.out.println("\n");
-        System.out.println(preresult);
-        System.out.println(rearresult);
+        System.out.println("前缀："+preresult); //相同为1不同为0
+        System.out.println("后缀："+rearresult);//相同为0不同为1
     }
 
     public static void precmpare() {  //生成结果（前缀）
         for (int j = 0; j < 4; j++) { //列
             int temp = 255;
-            for (int i = 1; i <= b; i++) { //行
-                temp = temp & genlist.get(i).get(j);
+            int count=temps.get(j).size();
+            for (int i = 0; i < count; i++) { //行
+                temp = temp & temps.get(j).get(i);
 
             }
-            System.out.println(temp);
+            System.out.println(temps);
             preresult.add(temp);
+            System.out.println(preresult);
         }
     }
 
     public static void rearcmpare() { //生成结果（后缀）
         for (int j = 0; j < 4; j++) {
-            arrya = new int[b];
-            for (int i = 0; i < b; i++) { //循环从第二个开始           //也就是 每列比较
-                arrya[i] = genlist.get(i).get(j);
-            }
-            System.out.println(Arrays.toString(arrya));
-            ACLpare my = new ACLpare();
-            System.out.println(my.mainin(arrya));
-            rearresult.add(my.mainin(arrya));
 
+            ACLpare acl=new ACLpare();
+            Integer [] cmparelist=new  Integer[temps.get(j).size()];
+            temps.get(j).toArray(cmparelist);
+            rearresult.add(new ACLpare().mainin(Arrays.stream(cmparelist).mapToInt(Integer::valueOf).toArray()));
         }
-
+        System.out.println(rearresult);
     }
+
     public  static void recive() {
 		/*
 		Scanner my=new Scanner(System.in);
@@ -65,8 +63,24 @@ public class ACLcalculator {
     }
 
 
-    public static void  paresm(String ip) {
+    public  static  void  generate(){
+        for(int i=0;i<=3;i++){
+            int flagnumber=list.get(i);   //list记录 list的 第1-4 字节
+           numbers= list2.get(i)-flagnumber;//number为要生成的个数 记录两个ip地址对应的第一 第二 第三 第四个 字节的差值
+            ArrayList<Integer> ctrate=new ArrayList<>(); //每个ctrate存储 要比较的 数组序列
+            for(int j=0;j<=numbers;j++){
+                ctrate.add(flagnumber+j);
+            }
+            temps.add(ctrate);
 
+        }
+
+
+    }
+
+
+
+    public static void  paresm(String ip) {
         String[] gu = ip.split("\\."); //把ip字符串以点分隔
         list = new ArrayList<>();
         for (String str : gu) {
@@ -85,17 +99,7 @@ public class ACLcalculator {
     }
 
 
-    public static void genate() {
-        b = list2.get(3) - list.get(3); // b为要生成的ip个数
-        int a = list.get(3);             //a为ip地址 第四个字节 数
-        for (int i = 0; i <= b; i++) {
-            list.set(3, a + i);           //生成要生成ip的第四个字节的数值
-            genlist.add(new ArrayList<>());  //添加 Arrylist数组
-            for (int j = 0; j < 4; j++) {
-                genlist.get(i).add(list.get(j)); //为每个ip添加 list 四个的字节 第四个字节是 动态变化的
-            }
-        }
-    }
+
 
     //静态内部类
      public static class ACLpare {
@@ -103,7 +107,7 @@ public class ACLcalculator {
            ArrayList<char[]> twoD=new ArrayList<>();
            ArrayList<Integer> resultarry=new ArrayList<>();
            ArrayList<Integer> latestResult=new ArrayList<>();
-//
+
 //    public static void main(String[] args) {
 //        ACLpare my=new ACLpare();
 //        System.out.println(my.mainin(new int[]{192,192,192}));
@@ -114,7 +118,6 @@ public class ACLcalculator {
         for (int k : a) {
             pares(k);
         }
-
 
         for(int j=0;j<this.twoD.get(0).length;j++)
         //循环8次
@@ -135,8 +138,6 @@ public class ACLcalculator {
             {
                 this.resultarry.add(1);
             }
-
-
         }
         StringBuilder myresult= new StringBuilder();
         for (Integer integer : this.resultarry) {
